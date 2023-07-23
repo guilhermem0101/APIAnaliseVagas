@@ -103,20 +103,20 @@ def mineradorNaGupy():
         title = ' '.join(title.split())
 
 
-        if data_publi == 'Hoje':
-            data_publi = datetime.now().strftime('%Y-%m-%d')
-        elif data_publi == 'Ontem':
-            ontem = datetime.now() - timedelta(days=1)
-            data_publi = ontem.strftime('%Y-%m-%d')
-        elif data_publi.startswith('Há'):
-            dias = int(data_publi.split()[1])
-            nova_data = datetime.now() - timedelta(days=dias)
-            data_publi = nova_data.strftime('%Y-%m-%d')
-        else:
-            data_publi = datetime.strptime(data_publi, '%d/%m/%Y').strftime('%Y-%m-%d')
+        # if data_publi == 'Hoje':
+        #     data_publi = datetime.now().strftime('%Y-%m-%d')
+        # elif data_publi == 'Ontem':
+        #     ontem = datetime.now() - timedelta(days=1)
+        #     data_publi = ontem.strftime('%Y-%m-%d')
+        # elif data_publi.startswith('Há'):
+        #     dias = int(data_publi.split()[1])
+        #     nova_data = datetime.now() - timedelta(days=dias)
+        #     data_publi = nova_data.strftime('%Y-%m-%d')
+        # else:
+        #     data_publi = datetime.strptime(data_publi, '%d/%m/%Y').strftime('%Y-%m-%d')
 
 
-        vaga = Vaga("Vagas", title, empresa, descricao, data_publi, link)
+        vaga = Vaga("Gupy", title, empresa, descricao, data_publi, link)
 
         vagas.append(vaga)
         
