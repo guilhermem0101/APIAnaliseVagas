@@ -169,7 +169,7 @@ def get_vagasQTDByDia():
 
 
 
-@bp.route('/minerar-vagas-teste', methods=['POST'])
+@bp.route('/minerar-vagas-teste', methods=['GET'])
 def insert_vaagasTeste():
     data = mineradorNoVagas()  # Obtém os dados enviados na solicitação POST
 
@@ -189,7 +189,7 @@ def insert_vaagasTeste():
     return jsonify(vagas_serializadas)
 
 
-@bp.route('/minerar-gupy-teste', methods=['POST'])
+@bp.route('/minerar-gupy-teste', methods=['GET'])
 def insert_gupyTeste():
     data = mineradorNaGupy()  # Obtém os dados enviados na solicitação POST
 
@@ -207,3 +207,45 @@ def insert_gupyTeste():
         vagas_serializadas.append(vaga_dict)
 
     return jsonify(vagas_serializadas)
+
+
+
+def calcular_histograma_vagas(data):
+    # Converter a lista de objetos Vaga em uma lista de dicionários
+    vagas_serializadas = []
+    for vaga in data:
+        vaga_dict = {
+            'plataforma': vaga.plataforma,
+            'titulo': vaga.titulo,
+            'empresa': vaga.empresa,
+            'descricao': vaga.descricao,
+            'data_publi': vaga.data_publi,
+            'link': vaga.link
+        }
+        vagas_serializadas.append(vaga_dict)
+
+    # Converter os dados serializados em um DataFrame pandas
+    df = pd.DataFrame(vagas_serializadas)
+
+    # Contar a quantidade de vagas por data_publi usando o DataFrame
+    histograma = df['data_publi'].value_counts().sort_index()
+
+    return histograma
+
+@bp.route('/hist-vagas-teste', methods=['GET'])
+def hist_vagasTeste():
+    data = mineradorNoVagas()  # Obtém os dados enviados na solicitação POST
+
+    # Calcular o histograma de vagas por dia utilizando os dados fornecidos
+    histograma_vagas = calcular_histograma_vagas(data)
+
+    # Gerar o gráfico de histograma
+    histograma_vagas.plot(kind='bar')
+
+    # Salvar o gráfico em um objeto BytesIO
+    img_buffer = io.BytesIO()
+    plt.savefig(img_buffer, format='png')
+    img_buffer.seek(0)
+
+    # Retorna a imagem diretamente como resposta
+    return send_file(img_buffer, mimetype='image/png')
